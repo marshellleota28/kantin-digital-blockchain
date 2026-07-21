@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Kantin Digital</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-warning">
+
+            <h2 class="text-center">
+
+                🍽️ Kantin Digital
+
+            </h2>
+
+            <p class="text-center">
+
+                Sistem Pemesanan Berbasis Blockchain
+
+            </p>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="mb-3">
+                <label>Nama Pembeli</label>
+                <input id="customer" class="form-control">
+            </div>
+
+
+            <div class="mb-3">
+                <label>Nomor Meja</label>
+
+                <select id="tableNumber" class="form-select">
+
+                    <option value="1">Meja 1</option>
+                    <option value="2">Meja 2</option>
+                    <option value="3">Meja 3</option>
+                    <option value="4">Meja 4</option>
+                    <option value="5">Meja 5</option>
+                    <option value="6">Meja 6</option>
+                    <option value="7">Meja 7</option>
+                    <option value="8">Meja 8</option>
+                    <option value="9">Meja 9</option>
+                    <option value="10">Meja 10</option>
+                    <option value="11">Meja 11</option>
+                    <option value="12">Meja 12</option>
+                    <option value="13">Meja 13</option>
+                    <option value="14">Meja 14</option>
+                    <option value="15">Meja 15</option>
+                    <option value="16">Meja 16</option>
+                    <option value="17">Meja 17</option>
+                    <option value="18">Meja 18</option>
+                    <option value="19">Meja 19</option>
+                    <option value="20">Meja 20</option>
+                    <option value="21">Meja 21</option>
+                    <option value="22">Meja 22</option>
+                    <option value="23">Meja 23</option>
+                    <option value="24">Meja 24</option>
+                    <option value="25">Meja 25</option>
+                    <option value="26">Meja 26</option>
+                    <option value="27">Meja 27</option>
+                    <option value="28">Meja 28</option>
+                    <option value="29">Meja 29</option>
+                    <option value="30">Meja 30</option>
+                </select>
+
+            </div>
+
+            <div class="mb-3">
+                <label>Kategori</label>
+            <select id="category" class="form-select">
+                <option value="Makanan">Makanan</option>
+                <option value="Minuman">Minuman</option>
+            </select>
+
+            </div>
+
+            <div class="mb-3">
+                <label>Nama Menu</label>
+
+                <select id="menu" class="form-select">
+                </select>
+
+            </div>
+
+            <div class="mb-3">
+                <label>Harga</label>
+                <input id="price" class="form-control" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label>Total Harga</label>
+                <input id="total" class="form-control" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label>Jumlah</label>
+                <input id="quantity" type="number" class="form-control">
+            </div>
+
+            <button id="orderBtn" class="btn btn-success w-100 mb-2">
+                Pesan Sekarang
+            </button>
+
+            <button id="statusBtn" class="btn btn-warning w-100 mb-2">
+                Update Status
+            </button>
+
+            <button id="readBtn" class="btn btn-primary w-100">
+                Lihat Pesanan
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<hr>
+
+<h4>Hasil Transaksi</h4>
+
+<pre id="result"></pre>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
