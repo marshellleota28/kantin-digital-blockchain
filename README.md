@@ -26,7 +26,7 @@ Teknologi dan Kegunaan
 | dotenv     | Konfigurasi Environment |
 
 ---
-## 📁 Struktur Project
+## Struktur Project
 kantin-digital-blockchain/
 │
 ├── backend/          # Backend Express
@@ -38,7 +38,7 @@ kantin-digital-blockchain/
 ├── package.json
 └── README.md
 
-## 🚀 Instalasi
+## Instalasi
 
 Clone repository
 ```bash
