@@ -30,3 +30,93 @@ label {
     border-radius: 10px;
     background: #fff8dc;
 }
+
+body{
+
+    background:#eef3f8;
+
+}
+
+.stat-card{
+
+    padding:20px;
+
+    border:none;
+
+    border-radius:18px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.warning{
+
+    background:#fff3cd;
+
+}
+
+.success{
+
+    background:#d1e7dd;
+
+}
+
+.danger{
+
+    background:#f8d7da;
+
+}
+
+.card{
+
+    border-radius:18px;
+
+}
+
+.table thead{
+
+    vertical-align:middle;
+
+}
+
+.table td{
+
+    vertical-align:middle;
+
+}
+
+.btn{
+
+    border-radius:10px;
+
+}
+
+.btn-warning{
+
+    color:black;
+
+    font-weight:bold;
+
+}
+
+.btn-success{
+
+    font-weight:bold;
+
+}
+
+.btn-danger{
+
+    font-weight:bold;
+
+}
+
+.card-header{
+
+    border-radius:18px 18px 0 0 !important;
+
+}

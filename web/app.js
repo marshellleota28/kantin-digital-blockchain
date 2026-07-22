@@ -1,285 +1,378 @@
-// =====================================================
-// DATA MENU KANTIN
-// =====================================================
+// =============================
+// DATA MENU
+// =============================
 
-const daftarMenu = {
+const foods = [
 
-    Makanan: [
-        { nama: "Nasi Goreng", harga: 18000 },
-        { nama: "Mie Goreng", harga: 17000 },
-        { nama: "Ayam Geprek", harga: 22000 },
-        { nama: "Bakso", harga: 15000 },
-        { nama: "Soto Ayam", harga: 20000 }
-    ],
+    { name: "Nasi Goreng", price: 18000 },
 
-    Minuman: [
-        { nama: "Es Teh", harga: 5000 },
-        { nama: "Es Jeruk", harga: 7000 },
-        { nama: "Kopi", harga: 12000 },
-        { nama: "Cappuccino", harga: 18000 },
-        { nama: "Jus Alpukat", harga: 15000 }
-    ]
+    { name: "Mie Goreng", price: 15000 },
 
-};
+    { name: "Ayam Geprek", price: 22000 },
 
-// =====================================================
-// MENGAMBIL KOMPONEN HTML
-// =====================================================
+    { name: "Sate Ayam", price: 25000 },
 
-const kategori = document.getElementById("category");
-const menuSelect = document.getElementById("menu");
-const harga = document.getElementById("price");
-const jumlah = document.getElementById("quantity");
-const total = document.getElementById("total");
+    { name: "Bakso", price: 17000 }
 
-const result = document.getElementById("result");
+];
 
-// =====================================================
-// URL BACKEND
-// =====================================================
+const drinks = [
 
-const API = "http://localhost:3000";
+    { name: "Es Teh", price: 5000 },
 
-// =====================================================
-// MENAMPILKAN HASIL TRANSAKSI
-// =====================================================
+    { name: "Es Jeruk", price: 7000 },
 
-function tampilkan(teks) {
-    result.innerText = teks;
-}
+    { name: "Jus Alpukat", price: 12000 },
 
-// =====================================================
-// MENAMPILKAN MENU BERDASARKAN KATEGORI
-// =====================================================
+    { name: "Kopi Hitam", price: 10000 },
+
+    { name: "Air Mineral", price: 4000 }
+
+];
+
+// =============================
+// CART
+// =============================
+
+let cart = [];
+document.getElementById("customer").value = "";
+renderCart();
+// =============================
+// LOAD MENU
+// =============================
 
 function loadMenu() {
 
-    const items = daftarMenu[kategori.value] || [];
-    menuSelect.innerHTML = "";
+    const foodList = document.getElementById("foodList");
 
-    if (items.length === 0) {
-        const option = document.createElement("option");
-        option.value = "";
-        option.textContent = "Belum ada menu";
-        menuSelect.appendChild(option);
-        harga.value = "";
-        total.value = "";
-        return;
-    }
+    const drinkList = document.getElementById("drinkList");
 
-    items.forEach((item) => {
+    foods.forEach(item => {
 
-        const option = document.createElement("option");
-        option.value = item.nama;
-        option.textContent = item.nama;
-        menuSelect.appendChild(option);
+        foodList.innerHTML += createCard(item);
 
     });
 
-    menuSelect.value = items[0].nama;
-    updateHarga();
+    drinks.forEach(item => {
+
+        drinkList.innerHTML += createCard(item);
+
+    });
 
 }
 
-// =====================================================
-// MENGHITUNG HARGA DAN TOTAL
-// =====================================================
+// =============================
+// CARD MENU
+// =============================
 
-function updateHarga() {
+function createCard(item){
 
-    const items = daftarMenu[kategori.value] || [];
-    const item = items.find(
-        x => x.nama === menuSelect.value
-    );
+    return `
 
-    if (!item) {
-        harga.value = "";
-        total.value = "";
-        return;
-    }
+    <div class="col-md-4">
 
-    const qty = Number(jumlah.value || 1);
+        <div class="card shadow-sm h-100">
 
-    harga.value =
-        "Rp " + item.harga.toLocaleString("id-ID");
+            <div class="card-body text-center">
 
-    total.value =
-        "Rp " +
-        (item.harga * qty)
-        .toLocaleString("id-ID");
+                <h5>${item.name}</h5>
+
+                <h6 class="text-success">
+
+                    Rp ${item.price.toLocaleString("id-ID")}
+
+                </h6>
+
+                <div class="d-flex justify-content-center align-items-center mb-3">
+
+                    <button
+                        class="btn btn-danger btn-sm"
+                        onclick="decreaseQty('${item.name}')">
+
+                        -
+
+                    </button>
+
+                    <input
+                        id="qty-${item.name}"
+                        class="form-control mx-2 text-center"
+                        value="1"
+                        readonly
+                        style="width:60px;">
+
+                    <button
+                        class="btn btn-success btn-sm"
+                        onclick="increaseQty('${item.name}')">
+
+                        +
+
+                    </button>
+
+                </div>
+
+                <button
+                    class="btn btn-primary w-100"
+                    onclick="addToCartQty('${item.name}')">
+
+                    Tambah ke Keranjang
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `;
 
 }
 
-// =====================================================
-// EVENT
-// =====================================================
+//  Function Quantity (+ dan -)
 
-kategori.onchange = loadMenu;
-menuSelect.onchange = updateHarga;
-jumlah.oninput = updateHarga;
 
-// Tampilkan menu pertama
-loadMenu();
+function increaseQty(name){
 
-// =====================================================
-// PESAN MAKANAN
-// =====================================================
+    const input=document.getElementById("qty-"+name);
 
-document.getElementById("orderBtn").onclick = async () => {
+    input.value=parseInt(input.value)+1;
 
-    // Mengambil data dari form
-    const customer = document.getElementById("customer").value.trim();
-    const tableNumber = Number(document.getElementById("tableNumber").value);
-    const category = kategori.value;
-    const menu = menuSelect.value;
-    const quantity = Number(jumlah.value || 1);
+}
 
-    // Validasi input
-    if (!customer) {
-        tampilkan("Silakan isi nama pembeli terlebih dahulu.");
-        return;
+function decreaseQty(name){
+
+    const input=document.getElementById("qty-"+name);
+
+    if(parseInt(input.value)>1){
+
+        input.value=parseInt(input.value)-1;
+
     }
 
-    if (!menu) {
-        tampilkan("Silakan pilih menu terlebih dahulu.");
-        return;
-    }
+}
 
-    if (quantity <= 0) {
-        tampilkan("Jumlah pesanan minimal 1.");
-        return;
-    }
+// =============================
+// TAMBAH KE CART
+// =============================
+function addToCartQty(name){
 
-    try {
+    const item = [...foods, ...drinks].find(x => x.name === name);
 
-        const response = await fetch(API + "/order", {
+    const qty = parseInt(document.getElementById("qty-" + name).value);
 
-            method: "POST",
+    const found = cart.find(x => x.name === name);
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+    if(found){
 
-            body: JSON.stringify({
+        found.qty += qty;
 
-                customer,
-                tableNumber,
-                category,
-                menu,
-                quantity
+    }else{
 
-            })
+        cart.push({
+
+            ...item,
+
+            qty: qty
 
         });
 
-        const data = await response.json();
+    }
 
-        if (!response.ok || !data.success) {
-            throw new Error(data.error || "Pesanan gagal dikirim.");
-        }
+    document.getElementById("qty-" + name).value = 1;
 
-        tampilkan(
-`Pesanan Berhasil!
+    renderCart();
 
+}
+
+// =============================
+// RENDER CART
+// =============================
+
+function renderCart(){
+
+    const body = document.getElementById("cartBody");
+
+    body.innerHTML="";
+
+    let total=0;
+
+    cart.forEach((item,index)=>{
+
+        const subtotal=item.price*item.qty;
+
+        total+=subtotal;
+
+        body.innerHTML+=`
+
+<tr>
+
+    <td>${item.name}</td>
+
+    <td>Rp ${item.price.toLocaleString("id-ID")}</td>
+
+    <td>
+
+        <button
+        class="btn btn-danger btn-sm"
+        onclick="cartMinus(${index})">
+
+        -
+
+        </button>
+
+        <span class="mx-2">
+
+            ${item.qty}
+
+        </span>
+
+        <button
+        class="btn btn-success btn-sm"
+        onclick="cartPlus(${index})">
+
+        +
+
+        </button>
+
+    </td>
+
+    <td>
+
+        Rp ${subtotal.toLocaleString("id-ID")}
+
+    </td>
+
+    <td>
+
+        <button
+        class="btn btn-danger btn-sm"
+        onclick="removeItem(${index})">
+
+        Hapus
+
+        </button>
+
+    </td>
+
+</tr>
+
+`;
+
+    });
+
+    document.getElementById("grandTotal").innerText=
+
+        total.toLocaleString("id-ID");
+
+}
+
+// Quantity di Cart
+function cartPlus(index){
+
+    cart[index].qty++;
+
+    renderCart();
+
+}
+
+function cartMinus(index){
+
+    cart[index].qty--;
+
+    if(cart[index].qty <= 0){
+
+        cart.splice(index,1);
+
+    }
+
+    renderCart();
+
+}
+
+
+
+// =============================
+// HAPUS ITEM
+// =============================
+
+function removeItem(index){
+
+    cart.splice(index,1);
+
+    renderCart();
+
+}
+
+// =============================
+// PESAN
+// =============================
+document.getElementById("orderBtn").addEventListener("click", async () => {
+    const customer = document.getElementById("customer").value;
+    if(customer.trim() === ""){
+        alert("Nama pembeli harus diisi");
+        return;
+    }
+
+    if(cart.length === 0){
+        alert("Keranjang masih kosong");
+        return;
+    }
+ try{
+
+    const response = await fetch("http://localhost:3000/order",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            customer,
+            cart
+        })
+    });
+
+    if(!response.ok){
+
+        const err = await response.json();
+
+        throw new Error(err.error || "Terjadi kesalahan");
+
+    }
+
+    const data = await response.json();
+
+    if(data.success){
+            document.getElementById("result").textContent =
+
+`==============================
+
+PESANAN BERHASIL
+
+==============================
 Nama Pembeli : ${customer}
-Nomor Meja   : ${tableNumber}
-Kategori     : ${category}
-Menu         : ${menu}
-Jumlah       : ${quantity}
+Nomor Antrean   : ${data.tableNumber}
+Total Harga  : Rp ${data.totalPrice.toLocaleString("id-ID")}
 
-Tx Hash :
-${data.hash}`
-        );
-
-    } catch (err) {
-
-        tampilkan(
-`Pesanan Gagal!
-
-${err.message}`
-        );
-
-    }
-
-};
-
-// =====================================================
-// UPDATE STATUS
-// =====================================================
-
-document.getElementById("statusBtn").onclick = async () => {
-    const status = prompt("Masukkan Status Baru");
-    if (!status) return;
-    try {
-        const response = await fetch(API + "/status", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                status
-            })
-        });
-        const data = await response.json();
-        if (!response.ok || !data.success) {
-            throw new Error(data.error);
+Daftar Menu  :
+${data.orderList}
+Status       : Diproses
+Transaction Hash
+${data.hash}
+Block Number
+${data.blockNumber}
+Gas Used
+${data.gasUsed}
+==============================`;
+            cart = [];
+            renderCart();
+            document.getElementById("customer").value = "";
+        }else{
+            alert(data.error);
         }
-        tampilkan(
-
-`Status Berhasil!
-
-Nomor Meja : ${data.tableNumber}
-
-Status Pesanan :
-${data.oldStatus} → ${data.newStatus}
-
-Status Meja :
-${data.newStatus === "CLEAR"
-    ? "Terpakai → Kosong"
-    : "Terpakai"}
-
-Tx Hash :
-
-${data.hash}`
-        );
-
-    } catch (err) {
-        tampilkan(
-`Gagal Update Status
-
-${err.message}`
-        );
+    }catch(err){
+        console.log(err);
+        alert(err.message);
     }
-};
+});
+// =============================
 
-// =====================================================
-// LIHAT PESANAN
-// =====================================================
-
-document.getElementById("readBtn").onclick = async () => {
-
-    try {
-        const response = await fetch(API + "/order");
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.error || "Gagal mengambil data.");
-        }
-        tampilkan(
-`Nama Pembeli : ${data.customer}
-Nomor Meja   : ${data.tableNumber}
-Kategori     : ${data.category}
-Menu         : ${data.menu}
-Jumlah       : ${data.quantity}
-Status       : ${data.status}`
-        );
-
-    } catch (err) {
-
-        tampilkan(
-`Gagal mengambil data!
-
-${err.message}`
-        );
-
-    }
-};
+loadMenu();

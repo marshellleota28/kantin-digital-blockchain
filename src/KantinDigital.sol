@@ -7,24 +7,48 @@ contract KantinDigital {
     // DATA PESANAN
     // ==========================
 
-    string public customerName;
-    uint256 public tableNumber;
-    string public category;
-    string public menuName;
-    uint256 public quantity;
-    string public status;
+    // Struct untuk menyimpan satu data pesanan
+    struct Order{
+
+        uint256 id;
+        string customerName;
+        uint256 tableNumber;
+        string orderList;
+        uint256 totalPrice;
+        string status;
+
+    }
+
+    // Menyimpan seluruh pesanan
+    Order[] public orders;
+
+    // Nomor ID pesanan otomatis
+    uint256 public nextOrderId = 1;
 
     // ==========================
     // STATUS MEJA
-    // true  = tersedia
-    // false = sedang dipakai
     // ==========================
 
     mapping(uint256 => bool) public tableAvailable;
 
     // ==========================
+    // EVENT------------------------event
+    // ==========================
+
+    event OrderPlaced(
+        string customerName,
+        uint256 tableNumber,
+        string orderList,
+        uint256 totalPrice
+    );
+
+    event StatusUpdated(
+        uint256 tableNumber,
+        string status
+    );
+
+    // ==========================
     // CONSTRUCTOR
-    // Mengaktifkan meja 1 - 10
     // ==========================
 
     constructor() {
@@ -36,15 +60,14 @@ contract KantinDigital {
     }
 
     // ==========================
-    // MEMBUAT PESANAN
-    // ==========================
+    // MEMBUAT PESANAN -----------------1 WRITE
+    // ========================== 
 
     function placeOrder(
         string memory _customerName,
         uint256 _tableNumber,
-        string memory _category,
-        string memory _menuName,
-        uint256 _quantity
+        string memory _orderList,
+        uint256 _totalPrice
     ) public {
 
         require(
@@ -52,30 +75,48 @@ contract KantinDigital {
             "Meja sedang digunakan"
         );
 
-        customerName = _customerName;
-        tableNumber = _tableNumber;
-        category = _category;
-        menuName = _menuName;
-        quantity = _quantity;
+        orders.push(
+            Order({
+                id: nextOrderId,
+                customerName: _customerName,
+                tableNumber: _tableNumber,
+                orderList: _orderList,
+                totalPrice: _totalPrice,
+                status: "Diproses"
+            })
+        );
 
-        status = "Diproses";
+        nextOrderId++;
 
         // meja menjadi terpakai
         tableAvailable[_tableNumber] = false;
+        Order storage newOrder = orders[orders.length - 1];
+
+        emit OrderPlaced(
+            newOrder.customerName,
+            newOrder.tableNumber,
+            newOrder.orderList,
+            newOrder.totalPrice
+        );
     }
 
     // ==========================
-    // UPDATE STATUS
+    // UPDATE STATUS----------------WRITE
     // ==========================
 
     function updateStatus(
+        uint256 orderId,
         string memory _status
     ) public {
 
-        status = _status;
+    require(
+        orderId > 0 && orderId <= orders.length,
+        "Order tidak ditemukan"
+    );
 
-        // jika pesanan selesai
-        // meja otomatis kosong kembali
+    Order storage order = orders[orderId - 1];
+
+        order.status = _status;
 
         if(
             keccak256(bytes(_status))
@@ -83,37 +124,64 @@ contract KantinDigital {
             keccak256(bytes("CLEAR"))
         ){
 
-            tableAvailable[tableNumber] = true;
+            tableAvailable[order.tableNumber] = true;
 
         }
+
+        emit StatusUpdated(
+            order.tableNumber,
+            order.status
+        );
 
     }
 
     // ==========================
-    // MELIHAT PESANAN
+    // MELIHAT PESANAN--------------------------READ
     // ==========================
 
-    function getOrder()
+        function getOrder(
+            uint256 orderId
+        )
         public
         view
         returns(
-            string memory,
+
             uint256,
             string memory,
+            uint256,
             string memory,
             uint256,
             string memory
+
         )
+        {
+            require(
+                orderId > 0 && orderId <= orders.length,
+                "Order tidak ditemukan"
+            );
+
+            Order memory order = orders[orderId-1];
+
+            return(
+
+                order.id,
+                order.customerName,
+                order.tableNumber,
+                order.orderList,
+                order.totalPrice,
+                order.status
+
+            );
+
+        }
+
+    function getOrderCount()
+    public
+    view
+    returns(uint256)
     {
 
-        return(
-            customerName,
-            tableNumber,
-            category,
-            menuName,
-            quantity,
-            status
-        );
+        return orders.length;
 
     }
 
@@ -130,6 +198,30 @@ contract KantinDigital {
     {
 
         return tableAvailable[_tableNumber];
+
+    }
+
+    // ==========================
+    // MENCARI MEJA YANG TERSEDIA
+    // READ
+    // ==========================
+    function getAvailableTable() public view returns(uint256){
+
+        // Mengecek meja mulai dari nomor 1 sampai 10
+        for(uint256 i = 1; i <= 10; i++){
+
+            // Jika meja masih tersedia
+            if(tableAvailable[i]){
+
+                // Mengembalikan nomor meja
+                return i;
+
+            }
+
+        }
+
+        // Jika semua meja penuh
+        revert("Semua meja penuh");
 
     }
 

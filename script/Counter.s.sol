@@ -1,18 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.20;
 
 import {Script} from "forge-std/Script.sol";
-import {Counter} from "../src/Counter.sol";
+import {KantinDigital} from "../src/KantinDigital.sol";
 
-contract CounterScript is Script {
-    Counter public counter;
-
-    function setUp() public {}
-
+contract DeployKantinDigital is Script {
     function run() public {
         vm.startBroadcast();
 
-        counter = new Counter();
+        new KantinDigital();
 
         vm.stopBroadcast();
     }
