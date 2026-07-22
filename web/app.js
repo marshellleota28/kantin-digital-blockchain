@@ -1,34 +1,9 @@
 // =============================
 // DATA MENU
 // =============================
+let foods = [];
 
-const foods = [
-
-    { name: "Nasi Goreng", price: 18000 },
-
-    { name: "Mie Goreng", price: 15000 },
-
-    { name: "Ayam Geprek", price: 22000 },
-
-    { name: "Sate Ayam", price: 25000 },
-
-    { name: "Bakso", price: 17000 }
-
-];
-
-const drinks = [
-
-    { name: "Es Teh", price: 5000 },
-
-    { name: "Es Jeruk", price: 7000 },
-
-    { name: "Jus Alpukat", price: 12000 },
-
-    { name: "Kopi Hitam", price: 10000 },
-
-    { name: "Air Mineral", price: 4000 }
-
-];
+let drinks = [];
 
 // =============================
 // CART
@@ -40,92 +15,72 @@ renderCart();
 // =============================
 // LOAD MENU
 // =============================
-
-function loadMenu() {
-
+async function loadMenu() {
+    const response = await fetch("http://localhost:3000/menu");
+    const menu = await response.json();
+    foods = menu.filter(item => item.category === "Makanan");
+    drinks = menu.filter(item => item.category === "Minuman");
     const foodList = document.getElementById("foodList");
-
     const drinkList = document.getElementById("drinkList");
-
+    foodList.innerHTML = "";
+    drinkList.innerHTML = "";
     foods.forEach(item => {
-
         foodList.innerHTML += createCard(item);
-
     });
-
     drinks.forEach(item => {
-
         drinkList.innerHTML += createCard(item);
-
     });
-
 }
 
 // =============================
 // CARD MENU
 // =============================
-
 function createCard(item){
-
+    const isHabis = item.status === "Habis";
     return `
-
     <div class="col-md-4">
-
         <div class="card shadow-sm h-100">
-
             <div class="card-body text-center">
-
                 <h5>${item.name}</h5>
-
                 <h6 class="text-success">
-
                     Rp ${item.price.toLocaleString("id-ID")}
-
                 </h6>
 
-                <div class="d-flex justify-content-center align-items-center mb-3">
-
-                    <button
-                        class="btn btn-danger btn-sm"
-                        onclick="decreaseQty('${item.name}')">
-
-                        -
-
-                    </button>
-
-                    <input
-                        id="qty-${item.name}"
-                        class="form-control mx-2 text-center"
-                        value="1"
-                        readonly
-                        style="width:60px;">
-
-                    <button
-                        class="btn btn-success btn-sm"
-                        onclick="increaseQty('${item.name}')">
-
-                        +
-
-                    </button>
-
-                </div>
-
+                ${
+                    isHabis
+                    ?
+                    ``
+                    :
+                    `
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        <button
+                            class="btn btn-danger btn-sm"
+                            onclick="decreaseQty('${item.name}')">
+                            -
+                        </button>
+                        <input
+                            id="qty-${item.name}"
+                            class="form-control mx-2 text-center"
+                            value="1"
+                            readonly
+                            style="width:60px;">
+                        <button
+                            class="btn btn-success btn-sm"
+                            onclick="increaseQty('${item.name}')">
+                            +
+                        </button>
+                    </div>
+                    `
+                }
                 <button
-                    class="btn btn-primary w-100"
-                    onclick="addToCartQty('${item.name}')">
-
-                    Tambah ke Keranjang
-
+                    class="btn ${isHabis ? "btn-secondary" : "btn-primary"} w-100"
+                    ${isHabis ? "disabled" : `onclick="addToCartQty('${item.name}')"`}>
+                    ${isHabis ? "Habis" : "Tambah ke Keranjang"}
                 </button>
-
             </div>
-
         </div>
-
     </div>
-
     `;
-
 }
 
 //  Function Quantity (+ dan -)
@@ -308,11 +263,16 @@ function removeItem(index){
 // =============================
 document.getElementById("orderBtn").addEventListener("click", async () => {
     const customer = document.getElementById("customer").value;
+    const paymentMethod =
+        document.getElementById("paymentMethod").value;
     if(customer.trim() === ""){
         alert("Nama pembeli harus diisi");
         return;
     }
-
+    if(paymentMethod === ""){
+    alert("Silakan pilih metode pembayaran");
+    return;
+    }
     if(cart.length === 0){
         alert("Keranjang masih kosong");
         return;
@@ -326,6 +286,7 @@ document.getElementById("orderBtn").addEventListener("click", async () => {
         },
         body:JSON.stringify({
             customer,
+            paymentMethod,
             cart
         })
     });
@@ -340,39 +301,54 @@ document.getElementById("orderBtn").addEventListener("click", async () => {
 
     const data = await response.json();
 
-    if(data.success){
-            document.getElementById("result").textContent =
+if(data.success){
 
-`==============================
+    document.getElementById("result").textContent =
+
+`========================================
 
 PESANAN BERHASIL
 
-==============================
-Nama Pembeli : ${customer}
-Nomor Antrean   : ${data.tableNumber}
-Total Harga  : Rp ${data.totalPrice.toLocaleString("id-ID")}
+========================================
+Nama Pembeli: ${customer}
 
-Daftar Menu  :
+Nomor Antrean: ${data.tableNumber}
+
+Metode Pembayaran: ${paymentMethod}
+
+Total Harga: Rp ${data.totalPrice.toLocaleString("id-ID")}
+
+Daftar Pesanan
 ${data.orderList}
-Status       : Diproses
-Transaction Hash
-${data.hash}
-Block Number
-${data.blockNumber}
-Gas Used
-${data.gasUsed}
-==============================`;
-            cart = [];
-            renderCart();
-            document.getElementById("customer").value = "";
-        }else{
-            alert(data.error);
-        }
-    }catch(err){
-        console.log(err);
-        alert(err.message);
-    }
+
+
+========================================
+
+Terima kasih telah menggunakan
+Kantin Digital Berbasis Blockchain Ethereum.
+
+========================================`;
+
+    cart = [];
+    renderCart();
+
+    document.getElementById("customer").value = "";
+
+    document.getElementById("paymentMethod").selectedIndex = 0;
+
+}else{
+
+    alert(data.error);
+
+}
+
+}catch(err){
+
+    console.log(err);
+    alert(err.message);
+
+}
+
 });
-// =============================
 
 loadMenu();

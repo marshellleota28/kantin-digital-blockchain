@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "name": "Nasi Goreng",
+        "category": "Makanan",
+        "price": 15000,
+        "status": "Ready"
+    },
+    {
+        "id": 2,
+        "name": "Mie Goreng",
+        "category": "Makanan",
+        "price": 15000,
+        "status": "Ready"
+    },
+    {
+        "id": 3,
+        "name": "Ayam Geprek",
+        "category": "Makanan",
+        "price": 20000,
+        "status": "Ready"
+    },
+    {
+        "id": 4,
+        "name": "Sate Ayam",
+        "category": "Makanan",
+        "price": 25000,
+        "status": "Ready"
+    },
+    {
+        "id": 5,
+        "name": "Bakso",
+        "category": "Makanan",
+        "price": 17000,
+        "status": "Ready"
+    },
+    {
+        "id": 6,
+        "name": "Es Teh",
+        "category": "Minuman",
+        "price": 5000,
+        "status": "Ready"
+    },
+    {
+        "id": 7,
+        "name": "Es Jeruk",
+        "category": "Minuman",
+        "price": 7000,
+        "status": "Ready"
+    },
+    {
+        "id": 8,
+        "name": "Jus Alpukat",
+        "category": "Minuman",
+        "price": 12000,
+        "status": "Ready"
+    },
+    {
+        "id": 9,
+        "name": "Kopi Hitam",
+        "category": "Minuman",
+        "price": 10000,
+        "status": "Ready"
+    },
+    {
+        "id": 10,
+        "name": "Air Mineral",
+        "category": "Minuman",
+        "price": 4000,
+        "status": "Ready"
+    }
+]

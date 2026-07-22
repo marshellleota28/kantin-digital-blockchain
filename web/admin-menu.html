@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Menu - Kantin Digital</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="fw-bold">
+            🍽 Kelola Menu Kantin Digital
+        </h2>
+
+        <a href="admin.html" class="btn btn-dark rounded-pill">
+
+            <i class="bi bi-arrow-left-circle"></i>
+
+            Kembali
+
+        </a>
+
+    </div>
+
+    <!-- CARD TAMBAH MENU -->
+
+    <div class="card border-0 shadow mb-4">
+
+        <div class="card-header bg-warning fw-bold fs-5">
+
+            <i class="bi bi-plus-circle-fill"></i>
+
+            Tambah Menu
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+
+                        Nama Menu
+
+                    </label>
+
+                    <input
+
+                        type="text"
+
+                        id="name"
+
+                        class="form-control"
+
+                        placeholder="Contoh : Nasi Goreng">
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label class="form-label fw-semibold">
+
+                        Kategori
+
+                    </label>
+
+                    <select
+
+                        id="category"
+
+                        class="form-select">
+
+                        <option>Makanan</option>
+
+                        <option>Minuman</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label class="form-label fw-semibold">
+
+                        Harga
+
+                    </label>
+
+                    <input
+
+                        type="number"
+
+                        id="price"
+
+                        class="form-control"
+
+                        placeholder="15000">
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <label class="form-label fw-semibold">
+
+                        Status
+
+                    </label>
+
+                    <select
+
+                        id="status"
+
+                        class="form-select">
+
+                        <option>Ready</option>
+
+                        <option>Habis</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2 d-grid">
+
+                    <label class="form-label">&nbsp;</label>
+
+                    <button
+
+                        class="btn btn-primary rounded-pill fw-semibold shadow-sm"
+
+                        onclick="addMenu()">
+
+                        <i class="bi bi-plus-circle-fill"></i>
+
+                        Tambah
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DAFTAR MENU -->
+
+    <div class="card border-0 shadow">
+
+        <div class="card-header bg-dark text-white fw-bold fs-5">
+
+            <i class="bi bi-list-ul"></i>
+
+            Daftar Menu
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-warning">
+
+                    <tr class="text-center">
+
+                        <th>ID</th>
+
+                        <th>Nama Menu</th>
+
+                        <th>Kategori</th>
+
+                        <th>Harga</th>
+
+                        <th>Status</th>
+
+                        <th width="220">
+
+                            Aksi
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="menuTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- MODAL EDIT MENU -->
+<!-- ========================= -->
+
+<div
+
+class="modal fade"
+
+id="editModal"
+
+tabindex="-1">
+
+<div class="modal-dialog">
+
+<div class="modal-content">
+
+<div class="modal-header bg-warning">
+
+<h5 class="modal-title">
+
+<i class="bi bi-pencil-square"></i>
+
+Edit Menu
+
+</h5>
+
+<button
+
+type="button"
+
+class="btn-close"
+
+data-bs-dismiss="modal">
+
+</button>
+
+</div>
+
+<div class="modal-body">
+
+<input
+
+type="hidden"
+
+id="editId">
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Nama Menu
+
+</label>
+
+<input
+
+type="text"
+
+id="editName"
+
+class="form-control">
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Kategori
+
+</label>
+
+<select
+
+id="editCategory"
+
+class="form-select">
+
+<option>Makanan</option>
+
+<option>Minuman</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Harga
+
+</label>
+
+<input
+
+type="number"
+
+id="editPrice"
+
+class="form-control">
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Status
+
+</label>
+
+<select
+
+id="editStatus"
+
+class="form-select">
+
+<option>Ready</option>
+
+<option>Habis</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+
+class="btn btn-secondary"
+
+data-bs-dismiss="modal">
+
+Batal
+
+</button>
+
+<button
+
+class="btn btn-warning"
+
+onclick="updateMenu()">
+
+<i class="bi bi-check-circle-fill"></i>
+
+Simpan
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="admin-menu.js"></script>
+
+</body>
+
+</html>

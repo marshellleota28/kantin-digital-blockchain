@@ -48,12 +48,12 @@ contract KantinDigital {
     );
 
     // ==========================
-    // CONSTRUCTOR
+    // CONSTRUCTOR-------------------MENENTUKAN JUMLAH NOMOR ANTREAN
     // ==========================
 
     constructor() {
 
-        for(uint i = 1; i <= 10; i++) {
+        for(uint i = 1; i <= 50; i++) {
             tableAvailable[i] = true;
         }
 
@@ -202,18 +202,18 @@ contract KantinDigital {
     }
 
     // ==========================
-    // MENCARI MEJA YANG TERSEDIA
+    // ANTREAN NOMOR MEJA/REMOTE YANG TERSEDIA
     // READ
     // ==========================
     function getAvailableTable() public view returns(uint256){
 
-        // Mengecek meja mulai dari nomor 1 sampai 10
-        for(uint256 i = 1; i <= 10; i++){
+        // Mengecek nomor antrean mulai dari nomor 1 sampai 10
+        for(uint256 i = 1; i <= 50; i++){
 
-            // Jika meja masih tersedia
+            // Jika antrean remote masih tersedia
             if(tableAvailable[i]){
 
-                // Mengembalikan nomor meja
+                // Mengembalikan nomor remote atau antrean
                 return i;
 
             }
