@@ -18,12 +18,12 @@ Dengan blockchain, setiap transaksi memiliki hash yang tersimpan secara permanen
 ---
 ## Teknologi
 Teknologi dan Kegunaan
-| Solidity   | Smart Contract |
-| Foundry    | Development & Testing |
-| Node.js    | Backend |
-| Express.js | REST API |
-| Ethers.js  | Interaksi dengan Blockchain |
-| dotenv     | Konfigurasi Environment |
+Solidity -- Smart Contract
+Foundry -- Development & Testing
+Node.js -- Backend
+Express.js -- REST API
+Ethers.js -- Interaksi dengan Blockchain
+dotenv -- Konfigurasi Environment
 
 ---
 ## Struktur Project
