@@ -129,6 +129,58 @@ Smart contract menyediakan beberapa fungsi read:
 - isTableAvailable()
 
 ---
+---
+
+## Event
+
+Smart contract menggunakan **event** untuk mencatat aktivitas penting yang terjadi pada blockchain. Setiap event akan terekam pada transaction receipt sehingga dapat digunakan sebagai bukti bahwa transaksi telah berhasil diproses.
+
+### 1. OrderPlaced
+
+Event ini dipanggil ketika pelanggan berhasil melakukan pemesanan melalui fungsi `placeOrder()`.
+
+Informasi yang dicatat meliputi:
+
+- Nama pelanggan (`customerName`)
+- Nomor remote (`tableNumber`)
+- Daftar pesanan (`orderList`)
+- Total harga (`totalPrice`)
+
+```solidity
+event OrderPlaced(
+    string customerName,
+    uint256 tableNumber,
+    string orderList,
+    uint256 totalPrice
+);
+```
+
+---
+
+### 2. StatusUpdated
+
+Event ini dipanggil ketika admin berhasil mengubah status pesanan menggunakan fungsi `updateStatus()`.
+
+Informasi yang dicatat meliputi:
+
+- Nomor remote (`tableNumber`)
+- Status terbaru pesanan (`status`)
+
+```solidity
+event StatusUpdated(
+    uint256 tableNumber,
+    string status
+);
+```
+
+---
+
+### Fungsi Event
+
+Event digunakan sebagai log transaksi pada blockchain sehingga setiap aktivitas penting dapat dilacak melalui **Transaction Hash**. Dengan adanya event, aplikasi dapat membuktikan bahwa transaksi benar-benar telah diproses oleh smart contract, sekaligus mendukung transparansi, integritas data, dan proses verifikasi transaksi pada sistem Kantin Digital Blockchain.
+
+
+
 
 # Cara Menjalankan Project
 
