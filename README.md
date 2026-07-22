@@ -27,160 +27,255 @@ Ethers.js -- Interaksi dengan Blockchain
 dotenv -- Konfigurasi Environment
 
 ---
-## Struktur Project
+# 📂 Struktur Project
+
 ```
-kantin-digital-blockchain/
+my-dapp
 │
-├── backend/          # Backend Express
-├── lib/              # Library Foundry
-├── script/           # Script deployment
-├── src/              # Smart Contract Solidity
-├── test/             # Unit Testing
+├── backend
+│   ├── data
+│   │   ├── menu.json
+│   │   └── orders.json
+│   └── server.js
+│
+├── script
+│
+├── src
+│   └── KantinDigital.sol
+│
+├── test
+│   └── KantinDigital.t.sol
+│
+├── web
+│   ├── index.html
+│   ├── admin.html
+│   ├── admin-menu.html
+│   ├── app.js
+│   ├── admin.js
+│   └── admin-menu.js
+│
 ├── foundry.toml
 ├── package.json
 └── README.md
 ```
 
 ---
-## Instalasi
-Clone repository
+
+# ✨ Fitur
+
+## Pelanggan
+
+- Melihat daftar menu
+- Memesan makanan
+- Memilih metode pembayaran
+- Nomor remote diberikan otomatis
+- Bukti transaksi blockchain
+- Riwayat transaksi
+
+---
+
+## Admin
+
+- Dashboard pesanan
+- Mengubah status pesanan
+- Mengelola menu
+- Dashboard statistik
+- Detail transaksi
+- Verifikasi Transaction Hash
+- Monitoring blockchain
+
+---
+
+# Smart Contract
+
+Smart contract dibuat menggunakan Solidity.
+
+## Write Function
+
+### 1. placeOrder()
+
+Digunakan untuk membuat pesanan baru.
+
+Fungsi ini akan:
+
+- Menyimpan data pesanan
+- Mengurangi ketersediaan remote
+- Menghasilkan Transaction Hash
+- Menyimpan data ke blockchain
+
+---
+
+### 2. updateStatus()
+
+Digunakan admin untuk mengubah status pesanan.
+
+Status yang tersedia:
+
+- Diproses
+- Selesai
+- CLEAR
+
+Apabila status menjadi **CLEAR**, maka remote kembali tersedia.
+
+---
+
+## Read Function
+
+Smart contract menyediakan beberapa fungsi read:
+
+- getOrder()
+- getOrderCount()
+- getAvailableTable()
+- isTableAvailable()
+
+---
+
+# Cara Menjalankan Project
+
+## 1. Clone Repository
+
 ```bash
 git clone https://github.com/marshellleota28/kantin-digital-blockchain.git
-```
-Masuk ke folder project
-```bash
 cd kantin-digital-blockchain
 ```
-### Install Backend
+
+---
+
+## 2. Install Dependency
+
+```bash
+npm install
+```
+
+---
+
+## 3. Jalankan Blockchain (Terminal 1)
+
+```bash
+anvil
+```
+
+---
+
+## 4. Deploy Smart Contract (Terminal 2)
+
+```bash
+forge script script/KantinDigital.s.sol:KantinDigitalScript \
+--rpc-url http://127.0.0.1:8545 \
+--private-key <PRIVATE_KEY> \
+--broadcast
+```
+
+Setelah deploy, salin Contract Address ke backend.
+
+---
+
+## 5. Jalankan Backend (Terminal 3)
+
 ```bash
 cd backend
 npm install
+node server.js
 ```
-### Konfigurasi Environment
-Salin file `.env.example` menjadi `.env`, kemudian isi konfigurasi berikut.
-```env
-RPC_URL=
-PRIVATE_KEY=
-CONTRACT_ADDRESS=
+
+Server berjalan di:
+
 ```
+http://localhost:3000
+```
+
 ---
-## Menjalankan Backend
+
+## 6. Jalankan Frontend (Terminal 4)
 
 ```bash
-npm start
+cd web
+python3 -m http.server 8000
 ```
 
-atau
-
-```bash
-node index.js
-```
-
----
-## Smart Contract
-Compile smart contract
-```bash
-forge build
-```
-Menjalankan unit test
-```bash
-forge test
-```
-Deploy smart contract
-```bash
-forge script
-```
-
----
-## Dokumentasi Smart Contract
-Smart contract **KantinDigital.sol** digunakan untuk mengelola transaksi serta status meja pada kantin digital.
-
-### Struktur Data
-Setiap pesanan disimpan menggunakan struktur berikut.
-
-| Field    b         | Tipe    | Keterangan |
-|-------             |------   |------------|
-| id                 | uint256 | ID pesanan |
-| customerName       | string  | Nama pelanggan |
-| tableNumber        | uint256 | Nomor meja |
-| orderList          | string  | Daftar pesanan |
-| totalPrice         | uint256 | Total harga |
-| status             | string  | Status pesanan |
-
----
-
-### Fungsi Smart Contract
-| Function                         | Jenis | Deskripsi |
-|----------                        |-------|-----------|
-| `placeOrder()`                   | Write | Menambahkan pesanan baru dan mengubah status meja menjadi digunakan. |
-| `updateStatus()`                 | Write | Mengubah status pesanan. Jika status menjadi **CLEAR**, meja kembali tersedia. |
-| `getOrder()`                     | Read  | Mengambil informasi pesanan berdasarkan ID. |
-| `getOrderCount()`                | Read  | Mengembalikan jumlah seluruh pesanan. |
-| `isTableAvailable()`             | Read  | Mengecek apakah suatu meja masih tersedia. |
-| `getAvailableTable()`            | Read  | Mengembalikan nomor meja pertama yang masih kosong. |
-
----
-### Event
-Smart contract menyediakan dua event utama.
-Event dan Fungsi
-`OrderPlaced` -- Dipanggil ketika pesanan baru berhasil dibuat.
-`StatusUpdated` -- Dipanggil ketika status pesanan diperbarui.
-
----
-### Mekanisme Sistem
-```
-Pelanggan
-     │
-     ▼
-Membuat Pesanan
-     │
-     ▼
-Backend Express
-     │
-     ▼
-Ethers.js
-     │
-     ▼
-Smart Contract
-     │
-     ▼
-Blockchain Ethereum
-```
-
-Alur perubahan status meja:
+Buka browser:
 
 ```
-Meja Tersedia
-      │
-      ▼
-placeOrder()
-      │
-      ▼
-Meja Digunakan
-      │
-      ▼
-updateStatus("CLEAR")
-      │
-      ▼
-Meja Tersedia Kembali
+http://localhost:8000
 ```
 
 ---
 
-## Tujuan
+# Alur Sistem
 
-Project ini dikembangkan sebagai implementasi teknologi blockchain pada sistem transaksi kantin digital dengan tujuan:
-
-- Mempelajari pengembangan smart contract menggunakan Solidity.
-- Mengintegrasikan backend Node.js dengan blockchain Ethereum.
-- Menjamin keamanan dan integritas data transaksi.
-- Menjadi media pembelajaran teknologi blockchain.
+1. Pelanggan membuka halaman utama.
+2. Sistem menampilkan daftar menu.
+3. Pelanggan mengisi nama.
+4. Pelanggan memilih metode pembayaran.
+5. Pelanggan memilih menu.
+6. Sistem memanggil fungsi `placeOrder()`.
+7. Blockchain menghasilkan Transaction Hash.
+8. Data transaksi disimpan.
+9. Admin melihat daftar pesanan.
+10. Admin mengubah status menggunakan `updateStatus()`.
+11. Jika status menjadi **CLEAR**, remote kembali tersedia.
+12. Admin dapat melakukan verifikasi transaksi menggunakan Transaction Hash.
 
 ---
-## Tim Pengembang
-Marshell Leota Timang -- 672023062 
-Tiska Jasia Yaspis Rasunde -- 672023294
+
+# Verifikasi Blockchain
+
+Aplikasi menyediakan halaman verifikasi transaksi blockchain.
+
+Informasi yang ditampilkan:
+
+- Transaction Hash
+- Block Number
+- Gas Used
+- Contract Address
+- Network
+- Chain ID
+- Status Blockchain
+- Data Pesanan
+- Status Integritas
+- Security Analysis
 
 ---
-## License
-Project ini dibuat untuk keperluan pembelajaran dan pengembangan akademik.
+
+# Bukti Perubahan State
+
+## Sebelum Pemesanan
+
+```
+Remote 1 : Available
+Jumlah Pesanan : 0
+```
+
+## Setelah placeOrder()
+
+```
+Remote 1 : In Use
+Jumlah Pesanan : 1
+Status : Diproses
+```
+
+## Setelah updateStatus(CLEAR)
+
+```
+Remote 1 : Available
+Status : CLEAR
+```
+
+---
+
+# 👨‍💻 Authors
+
+### Marshell Leota Timang
+- **NIM:** 672023059
+- **Program Studi:** S1 Teknik Informatika
+- **Universitas:** Universitas Kristen Satya Wacana
+
+### Tiska Jasia Yaspis Rasunde
+- **NIM:** 672023294
+- **Program Studi:** S1 Teknik Informatika
+- **Universitas:** Universitas Kristen Satya Wacana
+---
+
+# Lisensi
+
+Project ini dibuat untuk keperluan Tes Rancang.
