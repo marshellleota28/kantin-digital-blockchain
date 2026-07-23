@@ -1,0 +1,42 @@
+marshell_leota_timang@LAPTOP-KMHCSGIS:~/my-dapp/backend$ cd ~/my-dapp
+marshell_leota_timang@LAPTOP-KMHCSGIS:~/my-dapp$ deploykantin
+[⠊] Compiling...
+No files changed, compilation skipped
+Script ran successfully.
+
+## Setting up 1 EVM.
+
+==========================
+
+Chain 31337
+
+Estimated gas price: 1.285777308 gwei
+
+Estimated total gas used for script: 3030887
+
+Estimated amount required: 0.003897045727712196 ETH
+
+==========================
+
+##### anvil-hardhat
+✅  [Success] Hash: 0x1b4f256fde9af6e4d48af6a5b2ad5dd9a2e78443706d1cda4aa26155abc13cd6
+Contract: KantinDigital
+Contract Address: 0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1
+Block: 17
+Paid: 0.002623109000368892 ETH (2331452 gas * 1.125096721 gwei)
+
+✅ Sequence #1 on anvil-hardhat | Total Paid: 0.002623109000368892 ETH (2331452 gas * avg 1.125096721 gwei)
+
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+
+Transactions saved to: /home/marshell_leota_timang/my-dapp/broadcast/Counter.s.sol/31337/run-latest.json
+
+Sensitive values saved to: /home/marshell_leota_timang/my-dapp/cache/Counter.s.sol/31337/run-latest.json
+
+marshell_leota_timang@LAPTOP-KMHCSGIS:~/my-dapp$ cd ~/my-dapp/backend
+marshell_leota_timang@LAPTOP-KMHCSGIS:~/my-dapp/backend$ node server.js
+◇ injected env (3) from .env // tip: ⌘ enable debugging { debug: true }
+Server berjalan di http://localhost:3000
